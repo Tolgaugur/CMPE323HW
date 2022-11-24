@@ -17,11 +17,23 @@ void display(const vector<T> &vec)
 
 int main()
 {
-    int taskHalf = 5;
-    int taskHour = 5;
-    vector<double> taskPortionPayment = {100, 500, 800, 900, 1000};
+    double totalTaskLength;
+    cout << "Enter the assigned total task length: ";
+    cin >> totalTaskLength;
 
-    vector<vector<double>> table(taskHalf, vector<double>(taskHour, 0.0));
+    int taskHalf = totalTaskLength * 2;
+
+    vector<double> taskPortionPayment;
+
+    for (int i = 0; i < taskHalf; i++)
+    {
+        double taskPortionLength;
+        cout << "Enter the payment for ID " << i + 1 << " task portion: ";
+        cin >> taskPortionLength;
+        taskPortionPayment.push_back(taskPortionLength);
+    }
+
+    vector<vector<double>> table(taskHalf, vector<double>(taskHalf, 0.0));
 
     for (int i = 0; i < taskHalf; i++)
     {
@@ -44,11 +56,27 @@ int main()
         }
     }
 
-    vector<vector<double>> idTable(taskHalf, vector<double>(taskHour, 0.0));
+    vector<vector<double>> idTable(taskHalf, vector<double>(taskHalf, 0.0));
 
     for (int i = 0; i < taskHalf; i++)
     {
         idTable[i][i] = i + 1;
+    }
+
+    for (int i = 0; i < taskHalf; i++)
+    {
+        for (int j = i + 1; j < taskHalf; j++)
+        {
+            double max = 0;
+            for (int k = i; k < j; k++)
+            {
+                double payment = table[i][k] + table[k + 1][j];
+
+                if (payment > max)
+                    max = payment;
+            }
+            table[i][j] = max;
+        }
     }
 
     for (int i = 0; i < taskHalf; i++)
