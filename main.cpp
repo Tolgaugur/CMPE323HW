@@ -2,110 +2,69 @@
 #include <vector>
 #include <algorithm>
 
-using namespace std;
-
 template <typename T>
-void display(const vector<T> &vec)
+void display(const std::vector<T> &vec)
 {
-    for (int i = 0; i < vec.size(); i++)
+    for (auto &row : vec)
     {
-        for (int j = 0; j < vec[i].size(); j++)
-            cout << vec[i][j] << "\t";
-        cout << endl;
+        for (auto &col : row)
+        {
+            std::cout << col << "\t";
+        }
+        std::cout << std::endl;
     }
+}
+
+int unboundedKnapsack(const std::vector<int> &payment, const std::vector<float> &taskPortion, float totalTaskInHours)
+{
+    int n = payment.size();
+    int n2 = taskPortion.size();
+
+    int totalSize = n + n2;
+
+    std::vector<std::vector<int>> dp(n, std::vector<int>(totalSize + 1, 0));
+
+    for (int i = 0; i < n; i++)
+    {
+        dp[i][0] = 0;
+    }
+
+    for (int c = 0; c < totalSize + 1; c++)
+    {
+        dp[0][c] = int(c / taskPortion[0]) * payment[0];
+    }
+
+    int i, j;
+
+    for (i = 1; i < n; i++)
+    {
+        for (j = 0; j < totalSize + 1; j++)
+        {
+            if (taskPortion[i] <= j)
+            {
+                dp[i][j] = std::max(dp[i - 1][j], payment[i - 1] + dp[i][j - taskPortion[i - 1]]);
+            }
+            else
+            {
+                dp[i][j] = dp[i - 1][j];
+            }
+        }
+    }
+
+    display(dp);
+
+    return dp[i][j];
 }
 
 int main()
 {
-    double totalTaskLength;
-    cout << "Enter the assigned total task length: ";
-    cin >> totalTaskLength;
+    // std::vector<float> taskPortion = {0.5, 1, 1.5, 2, 2.5};
+    // std::vector<int> payment = {100, 500, 800, 900, 1000};
+    float totalTaskInHours = 8;
+    std::vector<float> taskPortion = {1.0, 3.0, 4.0, 5.0};
+    std::vector<int> payment = {15, 50, 60, 90};
 
-    int taskHalf = totalTaskLength * 2;
-
-    vector<double> taskPortionPayment;
-
-    for (int i = 0; i < taskHalf; i++)
-    {
-        double taskPortionLength;
-        cout << "Enter the payment for ID " << i + 1 << " task portion: ";
-        cin >> taskPortionLength;
-        taskPortionPayment.push_back(taskPortionLength);
-    }
-
-    vector<vector<double>> table(taskHalf, vector<double>(taskHalf, 0.0));
-
-    for (int i = 0; i < taskHalf; i++)
-    {
-        table[i][i] = taskPortionPayment[i];
-    }
-
-    for (int i = 0; i < taskHalf; i++)
-    {
-        for (int j = i + 1; j < taskHalf; j++)
-        {
-            double max = 0;
-            for (int k = i; k < j; k++)
-            {
-                double payment = table[i][k] + table[k + 1][j];
-
-                if (payment > max)
-                    max = payment;
-            }
-            table[i][j] = max;
-        }
-    }
-
-    vector<vector<double>> idTable(taskHalf, vector<double>(taskHalf, 0.0));
-
-    for (int i = 0; i < taskHalf; i++)
-    {
-        idTable[i][i] = i + 1;
-    }
-
-    for (int i = 0; i < taskHalf; i++)
-    {
-        for (int j = i + 1; j < taskHalf; j++)
-        {
-            double max = 0;
-            for (int k = i; k < j; k++)
-            {
-                double payment = table[i][k] + table[k + 1][j];
-
-                if (payment > max)
-                    max = payment;
-            }
-            table[i][j] = max;
-        }
-    }
-
-    for (int i = 0; i < taskHalf; i++)
-    {
-        for (int j = i + 1; j < taskHalf; j++)
-        {
-            double max = 0;
-            for (int k = i; k < j; k++)
-            {
-                double payment = table[i][k] + table[k + 1][j];
-
-                if (payment > max)
-                    max = payment;
-                idTable[i][j] = k + 1;
-            }
-        }
-    }
-
-    int day = 1;
-    int i = 0;
-    int j = taskHalf - 1;
-    while (i < j)
-    {
-        cout << "On day " << day << " do task with id " << idTable[i][j] << endl;
-        i = idTable[i][j];
-        day++;
-    }
-
-    cout << " Most profitable completion of the task takes " << day << " days " << endl;
+    std::cout << unboundedKnapsack(payment, taskPortion, totalTaskInHours);
 
     return 0;
 }
