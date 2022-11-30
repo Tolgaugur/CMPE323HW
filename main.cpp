@@ -78,7 +78,6 @@ void maxProfit(const std::vector<idProfit> idProfitVec, const std::vector<int> i
     bool isTaskDone = false;
     bool isNegative = false;
 
-    // until taskLength is 0 get the max profit task
     while (taskLength > 0)
     {
         for (int i = 0; i < length; i++)
@@ -105,6 +104,8 @@ void maxProfit(const std::vector<idProfit> idProfitVec, const std::vector<int> i
             break;
         }
     }
+
+    std::cout << "\nThe most profitable completion of the assigned task takes " << dayCount << " day(s)." << std::endl;
 }
 
 int main()
@@ -126,7 +127,7 @@ int main()
     std::cout << std::endl;
 
     sortProfits(idProfit, taskLengthInHalfHours);
-    displayStruct(idProfit);
+    //! displayStruct(idProfit);
 
     maxProfit(idProfit, ids, taskLength);
 
