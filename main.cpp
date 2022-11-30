@@ -71,7 +71,6 @@ void sortProfits(std::vector<idProfit> &idProfitVec, int taskLengthInHr)
 void maxProfit(const std::vector<idProfit> idProfitVec, const std::vector<int> ids, double taskLength)
 {
     int totalGain = 0;
-    int taskLength = 0;
     int dayCount = 0;
 
     int length = taskLength * 2;
@@ -79,27 +78,31 @@ void maxProfit(const std::vector<idProfit> idProfitVec, const std::vector<int> i
     bool isTaskDone = false;
     bool isNegative = false;
 
-    for (int i = 0; i < length; i++)
+    // until taskLength is 0 get the max profit task
+    while (taskLength > 0)
     {
-        if (!isNegative)
+        for (int i = 0; i < length; i++)
         {
-            if (taskLength == 0)
+            if (idProfitVec[i].taskLength <= taskLength)
             {
+                totalGain += idProfitVec[i].profit;
+                taskLength -= idProfitVec[i].taskLength;
                 isTaskDone = true;
+
+                std::cout << "On day " << dayCount + 1 << " do the task with ID: " << idProfitVec[i].id << std::endl;
                 break;
             }
-            if (!isTaskDone)
-            {
-                if (taskLength > 0)
-                {
-                    taskLength -= idProfitVec[i].taskLength;
-                    totalGain += idProfitVec[i].profit;
-                }
-                else
-                {
-                    isNegative = true;
-                }
-            }
+        }
+
+        if (isTaskDone)
+        {
+            dayCount++;
+            isTaskDone = false;
+        }
+        else
+        {
+            isNegative = true;
+            break;
         }
     }
 }
@@ -120,7 +123,10 @@ int main()
     fillVectors(payments, taskLengths, ids, taskLengthInHalfHours);
     calculateProfits(payments, taskLengths, ids, idProfit, taskLengthInHalfHours);
 
+    std::cout << std::endl;
+
     sortProfits(idProfit, taskLengthInHalfHours);
+    displayStruct(idProfit);
 
     maxProfit(idProfit, ids, taskLength);
 
