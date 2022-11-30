@@ -51,7 +51,7 @@ void calculateProfits(const std::vector<int> payments, const std::vector<double>
 
     for (int i = 0; i < taskLengthInHr; i++)
     {
-        int profit = payments[i] / (i + 1);
+        double profit = (double)payments[i] / (i + 1);
 
         idProfit idprofitstruct;
         idprofitstruct.id = ids[i];
