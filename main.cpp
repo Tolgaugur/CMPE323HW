@@ -12,6 +12,7 @@ struct idProfit
 template <typename T>
 void display(const std::vector<T> &vec)
 {
+    //! Time complexity: O(n)
     std::cout << "[ ";
     for (const auto &elem : vec)
         std::cout << elem << " ";
@@ -20,6 +21,7 @@ void display(const std::vector<T> &vec)
 
 void displayStruct(const std::vector<idProfit> &vec)
 {
+    //! Time complexity: O(n)
     for (auto &elem : vec)
     {
         std::cout << "Task portion ID: " << elem.id << " having length " << elem.taskLength << " hour(s) has a profit of " << elem.profit << " TL." << std::endl;
@@ -28,6 +30,8 @@ void displayStruct(const std::vector<idProfit> &vec)
 
 void fillVectors(std::vector<int> &payments, std::vector<double> &taskLengths, std::vector<int> &ids, int taskLengthInHr)
 {
+    //! Time complexity: O(n)
+
     float hour = 0.5;
     int payment;
 
@@ -48,7 +52,7 @@ void fillVectors(std::vector<int> &payments, std::vector<double> &taskLengths, s
 
 void calculateProfits(const std::vector<int> payments, const std::vector<double> taskLengths, const std::vector<int> ids, std::vector<idProfit> &idProfitVec, int taskLengthInHr)
 {
-
+    //! Time complexity: O(n)
     for (int i = 0; i < taskLengthInHr; i++)
     {
         double profit = (double)payments[i] / (i + 1);
@@ -64,12 +68,15 @@ void calculateProfits(const std::vector<int> payments, const std::vector<double>
 
 void sortProfits(std::vector<idProfit> &idProfitVec, int taskLengthInHr)
 {
+    //! Time complexity: O(nlogn)
     std::sort(idProfitVec.begin(), idProfitVec.end(), [](const idProfit &a, const idProfit &b)
               { return a.profit > b.profit; });
 }
 
 void maxProfit(const std::vector<idProfit> idProfitVec, const std::vector<int> ids, double taskLength)
 {
+    //! Time Complexity: O(n)
+
     int totalGain = 0;
     int dayCount = 0;
 
@@ -116,20 +123,23 @@ int main()
 
     int taskLengthInHalfHours = taskLength * 2;
 
-    std::vector<int> payments;
-    std::vector<double> taskLengths;
-    std::vector<int> ids;
-    std::vector<idProfit> idProfit;
+    std::vector<int> payments;       //! Vector to store the payment values
+    std::vector<double> taskLengths; //! Vector to store the task lengths
+    std::vector<int> ids;            //! Vector to store the task portion IDs
+    std::vector<idProfit> idProfit;  //! Vector to store the task portion IDs, task lengths and profits
 
-    fillVectors(payments, taskLengths, ids, taskLengthInHalfHours);
-    calculateProfits(payments, taskLengths, ids, idProfit, taskLengthInHalfHours);
+    fillVectors(payments, taskLengths, ids, taskLengthInHalfHours);                //! Fill the vectors with the given values
+    calculateProfits(payments, taskLengths, ids, idProfit, taskLengthInHalfHours); //! Calculate the profits for each task portion
 
     std::cout << std::endl;
 
-    sortProfits(idProfit, taskLengthInHalfHours);
-    //! displayStruct(idProfit);
+    sortProfits(idProfit, taskLengthInHalfHours); //! Sort the profits in descending order
 
-    maxProfit(idProfit, ids, taskLength);
+    // displayStruct(idProfit);
+
+    maxProfit(idProfit, ids, taskLength); //! Find the most profitable completion of the assigned task
 
     return 0;
 }
+
+//* Total time complexity: O(nlogn)
